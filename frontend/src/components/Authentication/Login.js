@@ -22,7 +22,7 @@ const Login = () => {
 
   return (
     <VStack>
-      <FormControl id="email" isRequired>
+      <FormControl id="loginEmail" isRequired>
         <FormLabel>Email</FormLabel>
         <Input
           placeholder="Enter your Email"
@@ -30,7 +30,7 @@ const Login = () => {
         ></Input>
       </FormControl>
 
-      <FormControl id="password" isRequired>
+      <FormControl id="loginPassword" isRequired>
         <FormLabel>Password</FormLabel>
         <InputGroup>
           <Input

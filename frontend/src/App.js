@@ -17,4 +17,6 @@ function App() {
   );
 }
 
+//cloudinary base api url
+//https://api.cloudinary.com/v1_1/dk9igsmuf/image/upload
 export default App;
