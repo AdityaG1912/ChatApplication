@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      dbName: "MERN-CHAT-APP",
+      dbName: "MERN-Chat-App",
     });
     console.log(`Database connected ${conn.connection.host}`);
   } catch (error) {

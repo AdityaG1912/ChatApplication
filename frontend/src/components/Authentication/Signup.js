@@ -10,6 +10,7 @@ import {
   Show,
   Toast,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 const Signup = () => {
   const [name, setName] = useState();
@@ -19,6 +20,10 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState();
   const [pic, setPic] = useState();
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
+
+  //cloudinary base api url
+  //https://api.cloudinary.com/v1_1/dk9igsmuf/image/upload
 
   const handleClick = () => {
     setShow(!show);
@@ -27,6 +32,13 @@ const Signup = () => {
   const postDetails = (pics) => {
     setLoading(true);
     if (pics === undefined) {
+      toast({
+        title: "please select an image!",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
     }
   };
 
