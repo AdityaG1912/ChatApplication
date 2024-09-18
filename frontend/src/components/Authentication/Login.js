@@ -8,17 +8,70 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useToast } from "@chakra-ui/react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const history = useHistory();
 
   const handleClick = () => {
     setShow(!show);
   };
 
-  const submitHandler = () => {};
+  const submitHandler = async () => {
+    setLoading(true);
+    if (!email || !password) {
+      toast({
+        title: "Please fill all the fileds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { data } = await axios.post(
+        "api/user/login",
+        { email, password },
+        config
+      );
+      toast({
+        title: "Login Successful",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      localStorage.setItem("userinfo", JSON.stringify(data));
+      setLoading(false);
+      history.push("/chats");
+      return;
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
 
   return (
     <VStack>
@@ -26,6 +79,7 @@ const Login = () => {
         <FormLabel>Email</FormLabel>
         <Input
           placeholder="Enter your Email"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
         ></Input>
       </FormControl>
@@ -35,6 +89,7 @@ const Login = () => {
         <InputGroup>
           <Input
             type={show ? "text" : "password"}
+            value={password}
             placeholder="Enter your password"
             onChange={(e) => setPassword(e.target.value)}
           ></Input>
@@ -45,7 +100,13 @@ const Login = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <Button colorScheme="blue" w="100%" mt="15" onClick={submitHandler}>
+      <Button
+        colorScheme="blue"
+        w="100%"
+        mt="15"
+        isLoading={loading}
+        onClick={submitHandler}
+      >
         Log IN
       </Button>
       <Button
@@ -53,7 +114,7 @@ const Login = () => {
         colorScheme="red"
         w="100%"
         onClick={() => {
-          setEmail("guest@Email.com");
+          setEmail("guest@gmail.com");
           setPassword("12345");
         }}
       >
