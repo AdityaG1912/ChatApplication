@@ -7,7 +7,7 @@ import {
   InputRightElement,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -61,6 +61,7 @@ const Login = () => {
       history.push("/chats");
       return;
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error Occured!",
         description: error.response.data.message,
