@@ -22,7 +22,7 @@ import UserBadgeItem from "./UserAvatar/UserBadgeItem";
 import axios from "axios";
 import UserListItem from "./UserAvatar/UserListItem";
 
-const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const { selectedChat, setSelectedChat, user } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupChatName, setGroupChatName] = useState();
@@ -32,6 +32,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
   const [renameLoading, setRenameLoading] = useState(false);
   const toast = useToast();
 
+  //add new user to group chat
   const handleAddUser = async (newUser) => {
     if (selectedChat.users.find((u) => u._id === newUser._id)) {
       toast({
@@ -83,7 +84,53 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       setLoading(false);
     }
   };
-  const handleRemove = (user) => {};
+  // remove user from the group
+  const handleRemove = async (user1) => {
+    if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
+      toast({
+        title: "Only Admins can add someone",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        "/api/chat/groupremove",
+        {
+          chatId: selectedChat._id,
+          userId: user1._id,
+        },
+        config
+      );
+
+      user1._id === user._id ? setSelectedChat() : setSelectedChat(data);
+      setFetchAgain(!fetchAgain);
+      fetchMessages();
+      setLoading(false);
+    } catch (error) {
+      toast({
+        title: "Error removing New Users",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
+  // rename group
   const handleRename = async () => {
     if (!groupChatName) return;
 
@@ -119,7 +166,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 
     setGroupChatName("");
   };
-
+  // search user in add input group
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {

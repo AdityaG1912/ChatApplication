@@ -3,7 +3,7 @@ import { ChatState } from "../Context/ChatProvider.jsx";
 import { Box, Button, Stack, Text, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { AddIcon } from "@chakra-ui/icons";
-import ChatLoading from "./ChatLoading.jsx";
+import ChatLoading from "../Components/ChatLoading.jsx";
 import { getSender } from "../config/ChatLogics.js";
 import GroupChatModal from "./ChatPageComp/GroupChatModal.jsx";
 

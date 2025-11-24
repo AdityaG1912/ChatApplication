@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Drawer,
@@ -27,6 +28,7 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import ChatLoading from "../ChatLoading.jsx";
 import UserListItem from "./UserAvatar/UserListItem.jsx";
+import { getSender } from "../../config/ChatLogics.js";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -35,7 +37,14 @@ const SideDrawer = () => {
   const [loadingChat, setLoadingChat] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notifications,
+    setNotifications,
+  } = ChatState();
   const history = useHistory();
   const toast = useToast();
 
@@ -132,10 +141,39 @@ const SideDrawer = () => {
         </Text>
         <div>
           <Menu>
-            <MenuButton p={1}>
+            <MenuButton p={1} position="relative">
+              {notifications.length > 0 && (
+                <Badge
+                  colorScheme="red"
+                  borderRadius="full"
+                  px={2}
+                  position="absolute"
+                  top="-1"
+                  right="-1"
+                  fontSize="0.8rem"
+                >
+                  {notifications.length}
+                </Badge>
+              )}
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
-            {/* <MenuList> </MenuList> */}
+            <MenuList px={4} py={2}>
+              {!notifications.length && "No New Messages"}
+
+              {notifications.map((notif) => (
+                <MenuItem
+                  key={notif._id}
+                  onClick={() => {
+                    setSelectedChat(notif.chat);
+                    setNotifications(notifications.filter((n) => n !== notif));
+                  }}
+                >
+                  {notif.chat.isGroupChat
+                    ? `New message in ${notif.chat.chatName}`
+                    : `New message from ${getSender(user, notif.chat.users)}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

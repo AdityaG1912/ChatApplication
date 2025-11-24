@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import Login from "../components/Authentication/Login.jsx";
-import Signup from "../components/Authentication/Signup.jsx";
+import Login from "../Components/Authentication/Login.jsx";
+import Signup from "../Components/Authentication/Signup.jsx";
 import { Container, Text, Box } from "@chakra-ui/react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
