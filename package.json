@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
-    "postinstall": "npm install --prefix frontend2",
-    "build": "npm run build --prefix frontend2"
+    "build": "cd frontend2 && npm install && npm run build"
   },
   "keywords": [
     "[mern",
